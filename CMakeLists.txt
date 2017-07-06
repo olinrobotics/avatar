@@ -10,7 +10,7 @@ set(SOURCE_FILES
 add_executable(avatar ${SOURCE_FILES})
 
 find_package(dlib REQUIRED)
-include_directories(${dlib INCLUDE DIRS})
+include_directories(${DLIB_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${dlib_LIBRARIES})
 
 # 'ship' the dlib library within the project
