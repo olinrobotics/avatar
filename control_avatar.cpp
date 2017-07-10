@@ -6,9 +6,11 @@
 #include <dlib/image_processing/render_face_detections.h>
 #include <dlib/image_processing.h>
 #include <dlib/gui_widgets.h>
+#include <dlib/geometry.h>
 
 using namespace dlib;
 using namespace std;
+using namespace cv;
 
 int main() {
     try {
@@ -40,12 +42,11 @@ int main() {
             cv_image<bgr_pixel> cimg(temp);
 
             // Detect faces
-            std::vector<rectangle> faces = detector(cimg);
+            std::vector<dlib::rectangle> faces = detector(cimg);
             // Find pose of each face
             std::vector<full_object_detection> shapes;
-            for (unsigned long i = 0; i < faces.size(); ++i) {
+            for (unsigned long i = 0; i < faces.size(); ++i)
                 shapes.push_back(pose_model(cimg, faces[i]));
-            }
 
             // Display it all on the screen
             win.clear_overlay();
