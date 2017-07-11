@@ -1,4 +1,5 @@
 #include <Servo.h>        //include built in Arduino servo library
+#include "pitches.h"     // *TEST*
 
 // Set up Arduino Ports and Pins to support Robot
 int redLedPin = 11;          // robot alive red blinky light pin
@@ -6,14 +7,23 @@ int greenLedPin = 10;          // robot alive green blinky light pin
 int blueLedPin = 9;           // robot alive blue blinky light pin
 int eStopPin = 5;          // create name for E-Stop reading pin
 int delayPeriod = 100;     // hindbrain loop delay 
-int sharpDistance0 = 0;    // create name for sharp ir 0 analog input pin 0-- distance sensor for outside objects
-int sharpDistance1 = 1;    // create name for sharp ir 1 analog input pin 1-- distance sensor for anything in mouth
+int DT = 0;    // create name for sharp ir 0 analog input pin 0 / distance sensor for outside objects / sharpDistance0--> DT
+int DM = 1;    // create name for sharp ir 1 analog input pin 1-- distance sensor for anything in mouth / sharpDistance1--> DM
 int speakerPin = 6;        // create name for speaker pin
 int jaw = 60;             // variable to store jaw servo position in degrees
 Servo jawServo;           // create jaw servo object to control a servo
-char command = 'g' ;      // 'g' is go command from midbrain 'e' is stop, 
-char hBrainStatus = 'r'; // hindbrain status 'r' running, 'e' E-Stopped
+char command = 'g' ;      // 'g' is go command from midbrain 's' is stop, 
+char hBrainStatus = 'r'; // hindbrain status 'r' running, 's' E-Stopped
+char command = 'p' ; //'p' pickup command
+char command = 'd' //'d' drop command
 String readString;        // create a string to store Midbrain commands in
+int melody[] = {
+  NOTE_C3, NOTE_D3, NOTE_E3, NOTE_F3, NOTE_G3, NOTE_A4, 0, NOTE_D4  //*TEST* might sound bad
+};
+
+int noteDurations[] = {
+  4, 4, 4, 4, 4, 4, 4, 8
+};
 
 
 void setup() {
@@ -23,9 +33,17 @@ void setup() {
   pinMode (greenLedPin, OUTPUT);           //sets up Blinky "alive" light"
   pinMode (redLedPin, OUTPUT);           //sets up Blinky "alive" light"
   pinMode (eStopPin, INPUT);           //sets up Sense input of E-Stop button  
-  jawServo.write(60);  //set initial jaw position to 60 degrees or open
+  jawServo.write(60);         //set initial jaw position to 60 degrees or open
   jawServo.attach(3);                  //attach the jaw servo to pin 3
   Serial.begin(9600);                  //send and recieve at 9600 baud
+  for (int thisNote = 0; thisNote < 8; thisNote++) { //*TEST* melody
+    int noteDuration = 1000 / noteDurations[thisNote];    //*TEST* quarter note = 1000 / 4, eighth note = 1000/8, etc.
+    tone(6, melody[thisNote], noteDuration);     //*TEST* tone(pin, frequency, duration)
+    int pauseBetweenNotes = noteDuration * 1.30;  //*TEST*
+    delay(pauseBetweenNotes);  //*TEST*
+    noTone(6);   //*TEST* stop the tone playing
+  }
+
  // Run Hindbrain loop until commanded to stop by Midbrain
 
 }
@@ -47,24 +65,34 @@ if (Serial.available ()) {
   
     if (readString.length() >0) {
     Serial.println(readString);     //so you can see the captured string 
-    if (command != 'e') {      //during stop, ignore command to move jaw
+    if (command != 's') {      //during stop, ignore command to move jaw
     jaw = readString.toInt();       //convert readString into a jaw angle
     }     
     readString="";                  //empty readString for next input
     } 
     
- // Sense: Read and Process Robot Sensors
+ // S
+ // E
+ // N
+ // S
+ // E
+ // Read and Process Robot Sensors
 //Serial.println (readEstop()); //read and print
 if (readEstop()==1){
-  hBrainStatus = 'e' ; // if E-Stop switch triggered set Hindbrain status to E-Stopped
+  hBrainStatus = 's' ; // if E-Stop switch triggered set Hindbrain status to E-Stopped
 }
 else hBrainStatus - 'r' ; // else set status to running
 //Serial.println (sharpRange (sharpDistance0)); //Print range from Sharp on Pin A0 (debug only)
 //Serial.println (sharpRange (sharpDistance1)); //Print range from Sharp on Pin A1 (debug only)
-  float SharpRange0= sharpRange(sharpDistance0);  // Read Sharp mouth range 0 on Pin A0-- distance sensor for outside objects
-  float SharpRange1= sharpRange(sharpDistance1);  // Read Sharp nose range 1 on Pin A1-- distance sensor for anything in mouth
+  float DT= sharpRange(DT);  // Read Sharp mouth range 0 on Pin A0-- distance sensor for outside objects
+  float DM= sharpRange(DM);  // Read Sharp nose range 1 on Pin A1-- distance sensor for anything in mouth
 
-  // Think: Run low level cognition and safety code
+  //T
+  //H
+  //I
+  //N
+  //K
+  //Run low level cognition and safety code
 if (command == 'g') {  
   blink();                          // blink hindbrain running LEDs
 }
@@ -72,21 +100,39 @@ else { //if e-Stopepd
   delay (delayPeriod);
   delay (delayPeriod); 
 }
+if (command == 'p') {
+  Serial.println (Pick up);
+  jawServo.write(60);              // command open mouth
+  delay(500);
+  if (DM < 15.0){                 // if something in the mouth
+    jawServo.write(70);              // command close mouth 
+    delay(500);
 
-   
-  // Act: Run actuators and behavior lights
+}
+if (command == 'd') {
+  Serial.println (Drop);
+  jawServo.write(60);              // command open mouth
+  delay(500);
+}   
+if (DT < 15.0){
+  hBrainStatus = 's' ;
+}
+  //A 
+  //C
+  //T
+  //Run actuators and behavior lights
    
   // Write status data up to MidBrain
-  if (command == 'e') {
+  if (command == 's') {
   Serial.println("hind brain stopped");   //print hindbrain status on serial monitor
   }
   if (command == 'g') {
   Serial.println("Hind brain running!!!!");   //print hindbrain status on serial monitor
   Serial.println ("Commanding jaw angle:");
-  Serial.println ("Distance to outside objects:");
-  Serial.println (SharpRange0);  //distance sensor for outside objects
-  Serial.println ("Distance in mouth:");
-  Serial.println (SharpRange1);  //distance sensor for anything in mouth
+  Serial.println ("Distance to outside objects (DT):");
+  Serial.println (DT);  //distance sensor for outside objects
+  Serial.println ("Distance in mouth (DM):");
+  Serial.println (DM);  //distance sensor for anything in mouth
   Serial.println ("Jaw angle:");
   Serial.println (jaw);
   jawServo.write (jaw); 
