@@ -4,7 +4,7 @@ project(avatar)
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
-        control_avatar.cpp)
+        get_landmarks.cpp src/image_converter.cpp src/image_converter.h src/landmark_detector.cpp src/landmark_detector.h src/CvImage.cpp src/CvImage.h)
 
 add_executable(avatar ${SOURCE_FILES})
 
