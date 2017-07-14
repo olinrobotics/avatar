@@ -44,6 +44,7 @@ using namespace ros;
 //                        const std::string &encoding = std::string());
 //}
 
-int landmark_detector::main(int argc, char** argv) {
+int main(int argc, char** argv) {
     landmark_detector ld(argc, argv);
+    landmark_detector::get_landmarks(argc, argv);
 }

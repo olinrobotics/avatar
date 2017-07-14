@@ -42,7 +42,7 @@ public:
     }
 };
 
-int main(int argc, char** argv) {
+static int convert_images(int argc, char** argv) {
     ros::init(argc, argv, "image_converter");
     image_converter ic(argc, argv);
     ros::spin();

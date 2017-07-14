@@ -26,7 +26,6 @@ using namespace cv;
 using namespace cv_bridge;
 
 class landmark_detector {
-    unsigned long landmarks [136];
 
     /* subscribes to usb cam node and publishes landmarks to facial_landmarks node
     // input: argc and argv (for changing ros settings from command line)
@@ -52,6 +51,7 @@ public:
 
         // PROCESS OPENCV IMAGE
         image_converter ic(argc, argv);
+        convert_images(argc, argv);
         ros::Subscriber image_converter_sub = image_converter_node.subscribe("image_converter",
                                                                              1000, image_converter_callback);
 
@@ -60,7 +60,7 @@ public:
     // PUBLISH TO FACIAL_LANDMARKS NODE
     // initialize facial_landmarks node and node handler
 
-    void main(int argc, char** argv) {
+    static void get_landmarks(int argc, char** argv) {
 
         ros::spin();
     };
