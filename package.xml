@@ -1,21 +1,25 @@
-<package format="2">
+<package>
     <name>avatar</name>
-    <version>0.1</version>
-    <description>Version 0.1 (will allow) control of cursor using face
+    <version>0.0.0</version>
+    <description>Version 0.0.0 (will allow) control of cursor using face
     currently allows detection of 68 landmarks in face</description>
     <maintainer email = "sophianielsen221b@gmail.com"></maintainer>
     <license>TODO</license>
 
     <buildtool_depend>catkin</buildtool_depend>
     <build_depend>roscpp</build_depend>
-    <build_depend>std_msg</build_depend>
+    <build_depend>std_msgs</build_depend>
     <build_depend>cv_bridge</build_depend>
     <build_depend>image_transport</build_depend>
+    <build_depend>dlib</build_depend>
+    <build_depend>opencv2</build_depend>
 
     <run_depend>roscpp</run_depend>
-    <run_depend>std_msg</run_depend>
+    <run_depend>std_msgs</run_depend>
     <run_depend>cv_bridge</run_depend>
     <run_depend>image_transport</run_depend>
+    <run_depend>dlib</run_depend>
+    <run_depend>opencv2</run_depend>
 
     <export>
         <!--- other unspecified tabs -->
